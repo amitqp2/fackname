@@ -1,199 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Fake Name Generator (USA/England)</title>
+<title>ফেইক নাম ও নম্বর জেনারেটর</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600&family=Poppins:wght@400;600&display=swap');
+  
+  :root {
+    --bg-grad-start: #0f2027;
+    --bg-grad-mid: #203a43;
+    --bg-grad-end: #2c5364;
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-hover-bg: rgba(255, 255, 255, 0.15);
+    --text-color: #f0f0f0;
+    --accent-color: #1dd1a1;
+    --accent-dark-color: #10ac84;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --font-primary: 'Poppins', 'Hind Siliguri', sans-serif;
+    --font-bengali: 'Hind Siliguri', sans-serif;
+  }
+
   * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
+
   body {
-    margin:0; padding:0;
-    height:100vh;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--bg-grad-start), var(--bg-grad-mid), var(--bg-grad-end));
+    font-family: var(--font-primary);
+    color: var(--text-color);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
-    flex-direction: column;
+    min-height: 100vh;
+    padding: 2rem 1rem;
     text-align: center;
   }
-  h1 {
-    margin-bottom: 0.5rem;
+
+  .main-title {
+    font-size: 2.2rem;
     font-weight: 600;
+    margin-bottom: 2rem;
+    text-shadow: 0 4px 10px var(--shadow-color);
   }
-  .name-container {
-    background: rgba(255,255,255,0.15);
+
+  .generator-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 600px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 var(--shadow-color);
+    transition: transform 0.3s ease;
+  }
+    
+  .generator-container:hover {
+      transform: translateY(-5px);
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  .output-area {
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
-    padding: 1.5rem 2rem;
-    font-size: 2.4rem;
-    letter-spacing: 1.2px;
+    padding: 1rem 1.5rem;
+    font-size: 1.8rem;
     user-select: none;
     margin-bottom: 1.5rem;
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     justify-content: center;
-    cursor: default;
+    align-items: center;
+    word-break: break-all;
+    flex-wrap: wrap;
   }
+  
+  .output-area.bengali {
+      font-family: var(--font-bengali);
+      font-size: 2rem;
+  }
+  
   .name-part {
-    background: rgba(255,255,255,0.3);
-    border-radius: 12px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    user-select: text;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
   }
   .name-part:hover {
-    background: rgba(255,255,255,0.6);
+      background: var(--card-hover-bg);
   }
-  button {
-    background: #ff6f91;
+
+  #bdNumberOutput {
+      cursor: pointer;
+      transition: background 0.3s ease;
+  }
+  #bdNumberOutput:hover {
+      background: var(--card-hover-bg);
+  }
+
+  .generate-btn {
+    background: var(--accent-color);
     border: none;
     border-radius: 50px;
-    padding: 1rem 3rem;
-    font-size: 1.25rem;
+    padding: 0.8rem 2.5rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: white;
+    color: var(--bg-grad-start);
     cursor: pointer;
-    box-shadow: 0 8px 15px rgba(255,111,145,0.4);
+    box-shadow: 0 6px 12px rgba(29, 209, 161, 0.3);
     transition: background 0.3s ease, transform 0.2s ease;
+    font-family: var(--font-bengali);
   }
-  button:hover {
-    background: #ff4273;
+
+  .generate-btn:hover {
+    background: var(--accent-dark-color);
     transform: scale(1.05);
   }
+
   .toast {
     position: fixed;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: #333;
+    background: var(--accent-dark-color);
     color: #fff;
     padding: 12px 24px;
     border-radius: 24px;
     font-weight: 600;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     z-index: 1000;
+    font-family: var(--font-bengali);
   }
+
   .toast.show {
     opacity: 1;
+    transform: translateX(-50%) translateY(-20px);
     pointer-events: auto;
   }
+
   footer {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
+    margin-top: 2rem;
     font-size: 0.9rem;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .footer-link {
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+  }
+  .footer-link:hover {
+      color: var(--accent-color);
+  }
+  .footer-link svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
   }
 </style>
 </head>
 <body>
 
-<h1>Fake Name Generator</h1>
+<h1 class="main-title">ফেইক নাম ও নম্বর জেনারেটর</h1>
 
-<div class="name-container">
-  <div id="firstName" class="name-part" title="Click to copy first name"></div>
-  <div id="lastName" class="name-part" title="Click to copy last name"></div>
+<div class="generator-container">
+  <h2>English Fake Name (ইংরেজি ফেইক নাম)</h2>
+  <div class="output-area">
+      <div class="name-part" id="firstName"></div>
+      <div class="name-part" id="lastName"></div>
+  </div>
+  <button id="generateEnglishBtn" class="generate-btn">জেনারেট</button>
 </div>
 
-<button id="generateBtn">Generate Name</button>
+<div class="generator-container">
+  <h2>Bangla Fake Name (বাংলা ফেইক নাম)</h2>
+  <div class="output-area bengali">
+      <div class="name-part" id="bengaliFirstName"></div>
+      <div class="name-part" id="bengaliLastName"></div>
+  </div>
+  <button id="generateBengaliBtn" class="generate-btn">জেনারেট</button>
+</div>
 
-<div id="toast" class="toast">Copied!</div>
+<div class="generator-container">
+  <h2>Bangladeshi Number (বাংলাদেশী নম্বর)</h2>
+  <div id="bdNumberOutput" class="output-area"></div>
+  <button id="generateNumberBtn" class="generate-btn">জেনারেট</button>
+</div>
 
-<footer>Made with ❤️ by @MrGhosh75</footer>
+<div id="toast" class="toast">কপি করা হয়েছে!</div>
+
+<footer>
+    <a href="https://t.me/MrGhosh75" target="_blank" rel="noopener noreferrer" class="footer-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L14.24 16l-3.2 3.14c-.34.35-.64.66-1.26.61z"/></svg>
+        <span>Developed by @MrGhosh75</span>
+    </a>
+</footer>
 
 <script>
-  const firstNames = [
-    "James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles",
-    "Christopher","Daniel","Matthew","Anthony","Donald","Mark","Paul","Steven","Andrew","Kenneth",
-    "Joshua","Kevin","Brian","George","Edward","Ronald","Timothy","Jason","Jeffrey","Ryan",
-    "Jacob","Gary","Nicholas","Eric","Stephen","Jonathan","Larry","Justin","Scott","Brandon",
-    "Benjamin","Samuel","Gregory","Frank","Alexander","Raymond","Patrick","Jack","Dennis","Jerry",
-    "Tyler","Aaron","Jose","Henry","Douglas","Peter","Adam","Nathan","Zachary","Walter",
-    "Kyle","Harold","Carl","Jeremy","Keith","Roger","Gerald","Ethan","Arthur","Terry",
-    "Christian","Sean","Lawrence","Austin","Joe","Noah","Jesse","Albert","Bryan","Billy",
-    "Bruce","Willie","Jordan","Dylan","Alan","Ralph","Gabriel","Roy","Juan","Wayne",
-    "Eugene","Logan","Randy","Louis","Russell","Vincent","Philip","Bobby","Johnny","Bradley",
-    "Jimmy","Randall","Barry","Alexander","Bernard","Calvin","Craig","Dale","Derek","Derrick",
-    "Ernest","Fred","Garry","Glen","Gordon","Howard","Isaac","Ivan","Jackie","Jay",
-    "Jeffery","Jesse","Joel","Joe","Jorge","Karl","Kurt","Lance","Lee","Leonard",
-    "Leroy","Lloyd","Lucas","Luis","Luke","Manuel","Marc","Marcus","Mario","Marvin",
-    "Melvin","Micah","Miguel","Mitchell","Nathaniel","Neil","Nelson","Nicholas","Oscar","Otis",
-    "Phillip","Randolph","Ray","Reginald","Ricardo","Roberto","Ruben","Russell","Seth","Shawn",
-    "Sidney","Stanley","Stephen","Steven","Terrence","Theodore","Travis","Trent","Trevor","Tristan",
-    "Tyrone","Vernon","Victor","Vincent","Wade","Wallace","Walter","Warren","Wayne","Wesley",
-    "Willard","Willie","Zachary","Adrian","Alfred","Allen","Alvin","Andre","Angel",
-    "Antonio","Archie","Arnold","Arthur","Austin","Barry","Bobby","Bradley","Brandon","Brent",
-    "Brett","Brian","Brock","Bruce","Bryan","Calvin","Carl","Carlos","Casey","Cecil",
-    "Chad","Charles","Charlie","Chester","Chris","Christian","Christopher","Clarence","Clark","Clifford",
-    "Cody","Craig","Curtis","Dale","Dan","Daniel","Danny","Darren","Daryl","Dave",
-    "David","Dean","Dennis","Derek","Derrick","Derrick","Don","Donald","Douglas","Dwayne",
-    "Dylan","Earl","Ed","Eddie","Edward","Edwin","Elijah","Elliott","Eric","Erik",
-    "Ernest","Ethan","Eugene","Evan","Everett","Felix","Fernando","Frank","Fred","Gabriel",
-    "Garrett","Garry","Gavin","Gene","Geoffrey","George","Gerald","Gilbert","Glen","Glenn",
-    "Godfrey","Gordon","Gregory","Harold","Harry","Harvey","Henry","Herbert","Howard","Hugh",
-    "Ian","Isaac","Ivan","Jack","Jackson","Jacob","Jake","James","Jamie","Jared",
-    "Jason","Jasper","Jay","Jeff","Jeffery","Jeremy","Jerome","Jerry","Jesse","Jim",
-    "Jimmy","Joe","Joel","John","Johnny","Jonathan","Jordan","Joseph","Josh","Joshua",
-    "Juan","Julian","Justin","Keith","Kelly","Ken","Kenneth","Kent","Kevin","Kirk",
-    "Kyle","Lance","Larry","Laurence","Lawrence","Lee","Leon","Leonard","Leroy","Leslie",
-    "Lloyd","Logan","Lonnie","Louis","Lucas","Luis","Luke","Malcolm","Manuel","Marc",
-    "Marcus","Mario","Mark","Marlon","Marshall","Martin","Marvin","Matt","Matthew","Maurice",
-    "Max","Melvin","Michael","Micheal","Miguel","Mike","Mitchell","Nathan","Nathaniel","Neil",
-    "Nicholas","Nick","Noah","Norman","Oliver","Oscar","Owen","Patrick","Paul","Pedro",
-    "Perry","Peter","Philip","Phillip","Preston","Quentin","Rafael","Ralph","Randall","Randy",
-    "Ray","Raymond","Reggie","Rex","Ricardo","Richard","Rick","Ricky","Roberto","Robert",
-    "Robin","Rodney","Roger","Roland","Ronald","Ronnie","Ross","Roy","Russell","Ryan",
-    "Samuel","Scott","Sean","Seth","Shane","Shawn","Sidney","Stanley","Stephen","Steve",
-    "Steven","Stewart","Ted","Terence","Terrance","Terrence","Terry","Theodore","Thomas","Tim",
-    "Timothy","Todd","Tom","Tommy","Tony","Tracy","Travis","Trevor","Tristan","Troy",
-    "Tyler","Tyson","Vernon","Victor","Vincent","Wade","Wallace","Walter","Warren","Wayne",
-    "Wesley","Willard","William","Willie","Zachary"
+document.addEventListener('DOMContentLoaded', () => {
+
+  // --- DATA ---
+  const englishFirstNames = [...new Set([
+    "James","John","Robert","Michael","William","David","Richard","Joseph","Thomas","Charles", "Christopher","Daniel","Matthew","Anthony","Donald","Mark","Paul","Steven","Andrew","Kenneth", "Joshua","Kevin","Brian","George","Edward","Ronald","Timothy","Jason","Jeffrey","Ryan", "Jacob","Gary","Nicholas","Eric","Stephen","Jonathan","Larry","Justin","Scott","Brandon", "Benjamin","Samuel","Gregory","Frank","Alexander","Raymond","Patrick","Jack","Dennis","Jerry", "Tyler","Aaron","Jose","Henry","Douglas","Peter","Adam","Nathan","Zachary","Walter"
+  ])];
+
+  const englishLastNames = [...new Set([
+    "Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez", "Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin", "Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson", "Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores", "Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts"
+  ])];
+
+  const bengaliFirstNames = [
+    "আকাশ","আরিফ","আলম","আবিদ","আশিক","ইমরান","ইমন","হাসান","জামাল","কামাল", "করিম","খালেদ","তারেক","তামিম","দিপু","নাসির","নাহিদ","ফরহাদ","ফারুক","বাপ্পি", "বিপ্লব","মাসুদ","মিজান","মুশফিক","মেহেদী","রনি","রাজু","রাসেল","রাকিব","রিপন", "সাকিব","সাজিদ","সাগর","সিয়াম","সুমন","সোহেল","হৃদয়","আয়েশা","আখি","জান্নাত", "জেসমিন","তানিয়া","তাসনিয়া","নাদিয়া","নাসরিন","নিপা","নুসরাত","ফাতেমা","ফারিয়া", "শারমিন","শিলা","শিমু","সাদিয়া","সুমি","সুমাইয়া"
   ];
 
-  const lastNames = [
-    "Smith","Johnson","Williams","Brown","Jones","Garcia","Miller","Davis","Rodriguez","Martinez",
-    "Hernandez","Lopez","Gonzalez","Wilson","Anderson","Thomas","Taylor","Moore","Jackson","Martin",
-    "Lee","Perez","Thompson","White","Harris","Sanchez","Clark","Ramirez","Lewis","Robinson",
-    "Walker","Young","Allen","King","Wright","Scott","Torres","Nguyen","Hill","Flores",
-    "Green","Adams","Nelson","Baker","Hall","Rivera","Campbell","Mitchell","Carter","Roberts",
-    "Gomez","Phillips","Evans","Turner","Diaz","Parker","Cruz","Edwards","Collins","Reyes",
-    "Stewart","Morris","Morales","Murphy","Cook","Rogers","Gutierrez","Ortiz","Morgan","Cooper",
-    "Peterson","Bailey","Reed","Kelly","Howard","Ramos","Kim","Cox","Ward","Richardson",
-    "Watson","Brooks","Chavez","Wood","James","Bennett","Gray","Mendoza","Ruiz","Hughes",
-    "Price","Alvarez","Castillo","Sanders","Patel","Myers","Long","Ross","Foster","Jimenez",
-    "Powell","Jenkins","Perry","Russell","Sullivan","Bell","Coleman","Butler","Henderson","Barnes",
-    "Gonzales","Fisher","Vasquez","Simmons","Romero","Jordan","Patterson","Alexander","Hamilton","Graham",
-    "Reynolds","Griffin","Wallace","Moreno","West","Cole","Hayes","Bryant","Herrera","Gibson",
-    "Elliott","Tran","Medina","Burns","Crawford","Olson","Simpson","Porter","Hunter","Gordon",
-    "Mendez","Silva","Shaw","Snyder","Mason","Dixon","Munoz","Hunt","Hicks","Holmes",
-    "Palmer","Wagner","Black","Robertson","Boyd","Rose","Stone","Salazar","Fox","Warren",
-    "Mills","Meyer","Rice","Schmidt","Garza","Daniels","Ferguson","Nichols","Stephens","Soto",
-    "Weaver","Ryan","Gardner","Payne","Grant","Dunn","Kelley","Spencer","Hawkins","Arnold",
-    "Pierce","Vargas","Sullivan","Fields","Gutierrez","Ryan","Chavez","Pierce","Ramirez","Murray",
-    "Ford","Marshall","Owens","Mccoy","Blackwell","Hanson","Lynch","Burke","Franklin","Guerra",
-    "Powell","Webb","Walsh","Little","Hines","Sweeney","Barrett","Cummings","Walters","Moran",
-    "Bowman","Fleming","Hart","Hopkins","Keller","Moss","Sullivan","Jensen","Nicholson","Wilkins",
-    "Knight","Gilbert","Burton","Hanson","Dean","Castro","Austin","Bates","Hale","Rhodes",
-    "Pena","Jordan","Holmes","Johnston","Banks","Snyder","Sharp","Gregory","Williamson","Stephens",
-    "Marshall","Fields","Gilbert","Brock","Diaz","Greene","Hamilton","Gordon","Payne","Owens",
-    "Freeman","Morris","Washington","Porter","Harper","Grant","Marshall","Owens","Fernandez","Gutierrez",
-    "Palmer","McCarthy","Waters","Wells","Stone","Richards","Willis","Jordan","Craig","Simmons",
-    "Ferguson","Kennedy","Wallace","Gardner","George","Ellis","Rice","Hunter","Burke","Henry"
+  const bengaliLastNames = [
+    "খান","চৌধুরী","সরকার","শেখ","আহমেদ","ইসলাম","রহমান","হোসেন","আকন্দ","মণ্ডল", "তালুকদার","পাটোয়ারী","বিশ্বাস","মোল্লা","শিকদার","মিয়া","হক","উদ্দিন","কবির"
   ];
 
+  // --- DOM ELEMENTS ---
+  const toast = document.getElementById('toast');
+  
+  // English
   const firstNameDiv = document.getElementById('firstName');
   const lastNameDiv = document.getElementById('lastName');
-  const generateBtn = document.getElementById('generateBtn');
-  const toast = document.getElementById('toast');
+  const generateEnglishBtn = document.getElementById('generateEnglishBtn');
+  
+  // Bengali
+  const bengaliFirstNameDiv = document.getElementById('bengaliFirstName');
+  const bengaliLastNameDiv = document.getElementById('bengaliLastName');
+  const generateBengaliBtn = document.getElementById('generateBengaliBtn');
+  
+  // Number
+  const bdNumberOutputDiv = document.getElementById('bdNumberOutput');
+  const generateNumberBtn = document.getElementById('generateNumberBtn');
 
+  // --- UTILITY FUNCTIONS ---
   function getRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
@@ -201,34 +257,53 @@
   function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1500);
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+    
+  function copyToClipboard(text, message) {
+      if(!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+          showToast(message);
+      }).catch(err => {
+          console.error('Failed to copy: ', err);
+          showToast('কপি করতে ব্যর্থ');
+      });
   }
 
-  function generateName() {
-    const first = getRandom(firstNames);
-    const last = getRandom(lastNames);
-    firstNameDiv.textContent = first;
-    lastNameDiv.textContent = last;
+  // --- GENERATOR LOGIC & EVENT LISTENERS ---
+
+  // 1. English Name Generator
+  function generateEnglishName() {
+    firstNameDiv.textContent = getRandom(englishFirstNames);
+    lastNameDiv.textContent = getRandom(englishLastNames);
   }
+  generateEnglishBtn.addEventListener('click', generateEnglishName);
+  firstNameDiv.addEventListener('click', () => copyToClipboard(firstNameDiv.textContent, `প্রথম নাম "${firstNameDiv.textContent}" কপি হয়েছে!`));
+  lastNameDiv.addEventListener('click', () => copyToClipboard(lastNameDiv.textContent, `শেষ নাম "${lastNameDiv.textContent}" কপি হয়েছে!`));
 
-  firstNameDiv.addEventListener('click', () => {
-    const text = firstNameDiv.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      showToast(`First Name "${text}" copied!`);
-    });
-  });
+  // 2. Bengali Name Generator
+  function generateBengaliName() {
+    bengaliFirstNameDiv.textContent = getRandom(bengaliFirstNames);
+    bengaliLastNameDiv.textContent = getRandom(bengaliLastNames);
+  }
+  generateBengaliBtn.addEventListener('click', generateBengaliName);
+  bengaliFirstNameDiv.addEventListener('click', () => copyToClipboard(bengaliFirstNameDiv.textContent, `প্রথম নাম "${bengaliFirstNameDiv.textContent}" কপি হয়েছে!`));
+  bengaliLastNameDiv.addEventListener('click', () => copyToClipboard(bengaliLastNameDiv.textContent, `শেষ নাম "${bengaliLastNameDiv.textContent}" কপি হয়েছে!`));
 
-  lastNameDiv.addEventListener('click', () => {
-    const text = lastNameDiv.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      showToast(`Last Name "${text}" copied!`);
-    });
-  });
+  // 3. Bangladeshi Number Generator
+  function generateBdNumber() {
+    const randomDigits = Math.floor(10000000 + Math.random() * 90000000);
+    bdNumberOutputDiv.textContent = '019' + randomDigits.toString();
+  }
+  generateNumberBtn.addEventListener('click', generateBdNumber);
+  bdNumberOutputDiv.addEventListener('click', () => copyToClipboard(bdNumberOutputDiv.textContent, `নম্বর "${bdNumberOutputDiv.textContent}" কপি হয়েছে!`));
 
-  generateBtn.addEventListener('click', generateName);
+  // --- INITIAL GENERATION ON LOAD ---
+  generateEnglishName();
+  generateBengaliName();
+  generateBdNumber();
 
-  // Generate one on load
-  generateName();
+});
 </script>
 
 </body>
